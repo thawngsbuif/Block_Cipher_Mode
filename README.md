@@ -6,7 +6,7 @@ Mã hoá / giải mã dùng AES-128 theo mode ECB, với padding PKCS#7.
 ## Cấu trúc file  
 - `aes.h`, `aes.c` — thuật toán AES-128 (encrypt / decrypt 1 block 16 byte)  
 - `cbc.h`, `cbc.c` — mode EBC + padding/unpadding  
-- `main.c` — chương trình chính cho người dùng nhập key / IV / plaintext → mã hoá & giải mã  
+- `main.c` — chương trình chính cho người dùng nhập key / plaintext → mã hoá & giải mã  
 
 ## Biên dịch và chạy  
 ```bash
