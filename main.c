@@ -53,13 +53,12 @@ static int hex_string_to_bytes(const char *hex_str,
 static void bytes_to_hex(const unsigned char *data, int len)
 {
     for (int i = 0; i < len; i++) {
-        // IN HOA HOÀN TOÀN
-        printf("%02X", data[i]);
+        printf("%02x", data[i]);
     }
     printf("\n");
 }
 
-// đọc một dòng, bỏ \n cuối
+
 static void read_line(char *buf, int max_len)
 {
     if (fgets(buf, max_len, stdin) == NULL) {
