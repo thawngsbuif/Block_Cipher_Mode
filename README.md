@@ -16,10 +16,10 @@ File `main.c` cho phép người dùng **chọn mode** và **nhập plaintext d�
 Các file chính:
 
 - `aes.c`, `aes.h` – lõi AES-128 (mã hóa 1 block 16 byte)
-- `ecb.c`, `ecb.h` – triển khai mode **ECB** (+ PKCS7 padding)
-- `cbc.c`, `cbc.h` – triển khai mode **CBC** (+ PKCS7 padding)
-- `ctr.c`, `ctr.h` – triển khai mode **CTR** (không padding, dạng stream)
-- `ofb.c`, `ofb.h` – triển khai mode **OFB** (+ PKCS7 padding, tùy cách hiện thực)
+- `ecb.c`, `ecb.h` – triển khai mode **ECB** 
+- `cbc.c`, `cbc.h` – triển khai mode **CBC** 
+- `ctr.c`, `ctr.h` – triển khai mode **CTR** 
+- `ofb.c`, `ofb.h` – triển khai mode **OFB** 
 - `main.c` – chương trình chính, cho phép chọn mode và nhập dữ liệu
 
 Yêu cầu:
