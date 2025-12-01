@@ -19,7 +19,7 @@ encryptor = cipher.encryptor()
 decryptor = cipher.decryptor()
 
 # Plaintext
-plaintext = b"Secret Message!"
+plaintext = b"Theory of Cryptography"  
 
 
 print(f"Plaintext (ASCII): {plaintext.decode('utf-8')}")
