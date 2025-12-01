@@ -1,15 +1,14 @@
 #ifndef AES_H
 #define AES_H
 
-#include <stdint.h>
+// mã hoá 1 block 16 byte với AES-128
+void aes_encrypt_block(const unsigned char *key,
+                       const unsigned char *in,
+                       unsigned char *out);
 
-// AES-128: key 16 byte, block 16 byte
-void aes_encrypt_block(const uint8_t *key,
-                       const uint8_t *in,
-                       uint8_t *out);
+// giải mã 1 block 16 byte với AES-128
+void aes_decrypt_block(const unsigned char *key,
+                       const unsigned char *in,
+                       unsigned char *out);
 
-void aes_decrypt_block(const uint8_t *key,
-                       const uint8_t *in,
-                       uint8_t *out);
-
-#endif // AES_H
+#endif
