@@ -25,3 +25,6 @@ gcc -std=c11 -O2 main1.c aes.c cbc.c -o aes_cbc_demo
 - IV        = ef3098eed0df5d37a56da242cb81cecc
 - PLAINTEXT = 5468656f7279206f662043727970746f677261706879 (hex), or as ASCII:  Theory of Cryptography
 - CIPHERTEXT= ec9920dc403e66c51288b6d7b0c9080d080b039cc04563a70a0acffb97edf67d
+
+## Hướng dẫn tạo Test vector:
+- Người dùng thực hiện file `gen_test_vector.py`, chỉ cần thay đổi nội dung plaintext sẽ tự động sinh ra test vector tương ứng.
