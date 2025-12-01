@@ -33,7 +33,7 @@ Yêu cầu:
 
 ### Linux / WSL / macOS (gcc/clang)
 
-Trong thư mục chứa đầy đủ các file `.c` và `.h`:
+Trong thư mục chứa đầy đủ các file `.c` và `.h`: (mở terminal và chạy lệnh sau)
 
 ```bash
 gcc -o block_modes main.c aes.c ecb.c cbc.c ctr.c ofb.c
