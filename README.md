@@ -64,3 +64,5 @@ gcc -o block_modes main.c aes.c ecb.c cbc.c ctr.c ofb.c
 
 ## 4. Cách tạo test vector:
 - Người dùng thực thi file `gen.py` và sửa plaintext trong mã code để sinh ra test vector tương ứng.
+- Thực hiện tải thư viện nếu thiếu, chạy lệnh sau:
+  `pip install cryptography`
