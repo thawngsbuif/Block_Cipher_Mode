@@ -1,7 +1,6 @@
 # AES Block Cipher Modes (ECB, CBC, CTR, OFB)
 
 Project thực hiện mã AES-128 và các mode hoạt động phổ biến:
-
 - **ECB** (Electronic Codebook)
 - **CBC** (Cipher Block Chaining)
 - **CTR** (Counter Mode)
