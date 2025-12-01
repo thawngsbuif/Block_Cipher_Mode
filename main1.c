@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #include "aes.h"
-#include "cbc.h"
 #include "ctr.h"
 
 #define MAX_PLAINTEXT_LEN   1024
-#define MAX_CIPHERTEXT_LEN  (MAX_PLAINTEXT_LEN + CBC_BLOCK_SIZE)
+#define MAX_CIPHERTEXT_LEN  (MAX_PLAINTEXT_LEN + 16)
 
 // ======== HÀM PHỤ TRỢ ========
 
@@ -33,11 +33,6 @@ static void remove_spaces(char *s)
     *d = '\0';
 }
 
-// chuyển chuỗi hex sang mảng byte
-// - hex_str: chuỗi chỉ chứa [0-9a-fA-F], length chẵn
-// - out: buffer nhận kết quả
-// - out_len: trả về số byte
-// - return: 0 nếu ok, -1 nếu lỗi
 static int hex_string_to_bytes(const char *hex_str,
                                unsigned char *out,
                                int *out_len)
@@ -69,7 +64,7 @@ static void print_hex(const char *prefix,
         printf("%s", prefix);
     }
     for (int i = 0; i < len; i++) {
-        printf("%02X", buf[i]);
+        printf("%02x", buf[i]);
     }
     printf("\n");
 }
@@ -91,7 +86,7 @@ static void read_line(char *buf, int buf_size)
     }
 }
 
-// ======== MAIN ========
+// ======== MAIN (CTR ONLY) ========
 
 int main(void)
 {
@@ -99,20 +94,18 @@ int main(void)
     unsigned char iv[16];
 
     char input_line[4096];
-    char hex_tmp[4096];
 
     unsigned char plaintext_bytes[MAX_PLAINTEXT_LEN];
     unsigned char ciphertext[MAX_CIPHERTEXT_LEN];
-    unsigned char decrypted[MAX_PLAINTEXT_LEN + CBC_BLOCK_SIZE]; // đủ cho cả CBC sau unpad
+    unsigned char decrypted[MAX_PLAINTEXT_LEN];
 
     int plaintext_len = 0;
     int ct_len = 0;
     int pt_len = 0;
 
-    int mode = 0;          // 1 = CBC, 2 = CTR
     int plaintext_is_ascii = 0;
 
-    printf("=== DEMO AES-128 CBC / CTR ===\n\n");
+    printf("=== DEMO AES-128 CTR ===\n\n");
 
     // ========== NHẬP KEY ==========
     printf("Nhap key (hex 32 ki tu, khong hoac co dau cach):\n> ");
@@ -133,18 +126,6 @@ int main(void)
     int iv_len = 0;
     if (hex_string_to_bytes(input_line, iv, &iv_len) != 0 || iv_len != 16) {
         printf("IV khong hop le. Can 16 byte (32 hex).\n");
-        return 1;
-    }
-
-    // ========== CHỌN MODE ==========
-    printf("\nChon che do ma hoa:\n");
-    printf("  1) CBC (PKCS#7)\n");
-    printf("  2) CTR\n");
-    printf("Nhap lua chon (1/2): ");
-    read_line(input_line, sizeof(input_line));
-    mode = atoi(input_line);
-    if (mode != 1 && mode != 2) {
-        printf("Lua chon mode khong hop le.\n");
         return 1;
     }
 
@@ -196,61 +177,37 @@ int main(void)
         plaintext_len = tmp_len;
     }
 
-    // ========== MÃ HOÁ ==========
-    printf("\nDang ma hoa...\n");
+    // ========== MÃ HOÁ CTR ==========
+    printf("\nDang ma hoa (CTR)...\n");
 
-    if (mode == 1) {
-        // CBC + PKCS#7
-        ct_len = cbc_encrypt_pkcs7(key, iv,
-                                   plaintext_bytes, plaintext_len,
-                                   ciphertext);
-        if (ct_len < 0) {
-            printf("Loi ma hoa CBC.\n");
-            return 1;
-        }
-        printf("Che do: CBC (PKCS#7)\n");
-    } else {
-        // CTR
-        ct_len = ctr_encrypt(key, iv,
-                             plaintext_bytes, plaintext_len,
-                             ciphertext);
-        if (ct_len < 0) {
-            printf("Loi ma hoa CTR.\n");
-            return 1;
-        }
-        printf("Che do: CTR\n");
+    ct_len = ctr_encrypt(key, iv,
+                         plaintext_bytes, plaintext_len,
+                         ciphertext);
+    if (ct_len < 0) {
+        printf("Loi ma hoa CTR.\n");
+        return 1;
     }
 
+    printf("Che do: CTR\n");
     print_hex("Ciphertext (HEX): ", ciphertext, ct_len);
 
-    // ========== GIẢI MÃ ĐỂ KIỂM TRA ==========
-    printf("\nDang giai ma de kiem tra...\n");
+    // ========== GIẢI MÃ CTR ĐỂ KIỂM TRA ==========
+    printf("\nDang giai ma (CTR) de kiem tra...\n");
 
-    if (mode == 1) {
-        pt_len = cbc_decrypt_pkcs7(key, iv,
-                                   ciphertext, ct_len,
-                                   decrypted);
-        if (pt_len < 0) {
-            printf("Loi giai ma CBC (padding sai?).\n");
-            return 1;
-        }
-    } else {
-        pt_len = ctr_decrypt(key, iv,
-                             ciphertext, ct_len,
-                             decrypted);
-        if (pt_len < 0) {
-            printf("Loi giai ma CTR.\n");
-            return 1;
-        }
+    pt_len = ctr_decrypt(key, iv,
+                         ciphertext, ct_len,
+                         decrypted);
+    if (pt_len < 0) {
+        printf("Loi giai ma CTR.\n");
+        return 1;
     }
 
     printf("\nPlaintext sau giai ma:\n");
     if (plaintext_is_ascii) {
-        // đảm bảo kết thúc chuỗi
         if (pt_len < MAX_PLAINTEXT_LEN) {
             decrypted[pt_len] = '\0';
         } else {
-            decrypted[MAX_PLAINTEXT_LEN] = '\0';
+            decrypted[MAX_PLAINTEXT_LEN - 1] = '\0';
         }
         printf("  ASCII: %s\n", decrypted);
         print_hex("  HEX  : ", decrypted, pt_len);

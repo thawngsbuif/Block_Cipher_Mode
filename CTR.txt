@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <string.h>
+
+void xor_block(unsigned char *a, unsigned char *b, unsigned char *out, int block_size) {
+    for (int i = 0; i < block_size; i++) {
+        out[i] = a[i] ^ b[i];
+    }
+}
+
+void increase_counter(unsigned char *counter, int block_size) {
+    for (int i = block_size - 1; i >= 0; i--) {
+        counter[i]++;
+        if (counter[i] != 0) break; 
+    }
+}
+
+void encrypt_ctr(unsigned char *key, unsigned char *nonce, unsigned char *plaintext,
+                 int plaintext_len, unsigned char *ciphertext, int block_size) {
+
+    unsigned char counter[64];
+    unsigned char keystream[64];
+
+    memcpy(counter, nonce, block_size); 
+    int num_blocks = (plaintext_len + block_size - 1) / block_size;
+
+    for (int i = 0; i < num_blocks; i++) {
+        xor_block(counter, key, keystream, block_size);
+
+        int chunk = block_size;
+        if (i == num_blocks - 1 && plaintext_len % block_size != 0)
+            chunk = plaintext_len % block_size;
+
+        xor_block(plaintext + i * block_size, keystream, ciphertext + i * block_size, chunk);
+        increase_counter(counter, block_size);
+    }
+}
+
+int main() {
+    unsigned char key[] = "ABCDEFGHIJKLMNOP";   
+    unsigned char nonce[] = "1234567890ABCDEF";
+    unsigned char plaintext[] = "Hello, Blockcipher!";
+    int block_size = 16;
+
+    unsigned char ciphertext[256];
+    unsigned char decrypted[256];
+
+    int text_len = strlen((char*)plaintext);
+
+    printf("Plaintext: %s\n", plaintext);
+
+    encrypt_ctr(key, nonce, plaintext, text_len, ciphertext, block_size);
+
+    printf("Ciphertext (hex): ");
+    for (int i = 0; i < text_len; i++)
+        printf("%02X", ciphertext[i]);
+    printf("\n");
+
+    encrypt_ctr(key, nonce, ciphertext, text_len, decrypted, block_size);
+    decrypted[text_len] = '\0';
+
+    printf("Decrypted: %s\n", decrypted);
+
+    return 0;
+}
