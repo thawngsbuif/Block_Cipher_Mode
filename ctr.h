@@ -11,11 +11,11 @@ int ctr_encrypt(const unsigned char *key,
                 int input_len,
                 unsigned char *output);
 
-// Giải mã CTR (thực chất giống hệt mã hoá).
+// Giải mã CTR
 int ctr_decrypt(const unsigned char *key,
                 const unsigned char *iv,
                 const unsigned char *input,
                 int input_len,
                 unsigned char *output);
 
-#endif // CTR_H
+#endif 

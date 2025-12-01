@@ -12,7 +12,6 @@ static void xor_block(const unsigned char *a,
     }
 }
 
-// Thêm padding PKCS#7 vào block cuối
 static void pkcs7_add_block(unsigned char *block,
                             int used_bytes,
                             int block_size)
@@ -23,8 +22,6 @@ static void pkcs7_add_block(unsigned char *block,
     }
 }
 
-// Bỏ padding PKCS#7
-// return: độ dài mới hoặc -1 nếu padding không hợp lệ
 static int pkcs7_strip(unsigned char *data,
                        int in_len,
                        int block_size)

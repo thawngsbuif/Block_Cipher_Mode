@@ -12,8 +12,6 @@
 #define AES_BLOCK_SIZE 16
 #define MAX_INPUT_LEN  1024
 
-// ======= Helpers: HEX <-> bytes =======
-
 static int hex_char_to_val(char c)
 {
     if (c >= '0' && c <= '9') return c - '0';
@@ -22,10 +20,6 @@ static int hex_char_to_val(char c)
     return -1;
 }
 
-// hex_str: chuỗi không có "0x", ví dụ "001122AABB"
-// out: buffer nhận bytes
-// max_out: kích thước buffer
-// return: số byte convert được, hoặc -1 nếu lỗi
 static int hex_string_to_bytes(const char *hex_str,
                                unsigned char *out,
                                int max_out)
@@ -90,7 +84,6 @@ int main(void)
         return 1;
     }
 
-    // clear newline còn lại trong stdin
     int ch;
     while ((ch = getchar()) != '\n' && ch != EOF) {}
 
