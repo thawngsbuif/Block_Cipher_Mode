@@ -1,3 +1,46 @@
+# AES Block Cipher Modes (ECB, CBC, CTR, OFB)
+
+Project hiện thực AES-128 và các mode hoạt động phổ biến:
+
+- **ECB** (Electronic Codebook)
+- **CBC** (Cipher Block Chaining)
+- **CTR** (Counter Mode)
+- **OFB** (Output Feedback)
+
+File `main.c` cho phép người dùng **chọn mode** và **nhập plaintext dạng ASCII hoặc HEX**, sau đó in ra **ciphertext dạng HEX (chữ hoa)**.
+
+---
+
+## 1. Cấu trúc project
+
+Các file chính:
+
+- `aes.c`, `aes.h` – lõi AES-128 (mã hóa 1 block 16 byte)
+- `ecb.c`, `ecb.h` – triển khai mode **ECB** (+ PKCS7 padding)
+- `cbc.c`, `cbc.h` – triển khai mode **CBC** (+ PKCS7 padding)
+- `ctr.c`, `ctr.h` – triển khai mode **CTR** (không padding, dạng stream)
+- `ofb.c`, `ofb.h` – triển khai mode **OFB** (+ PKCS7 padding, tùy cách hiện thực)
+- `main.c` – chương trình chính, cho phép chọn mode và nhập dữ liệu
+
+Yêu cầu:
+
+- AES-128: **key 16 byte** (128 bit)
+- Block size: **16 byte**
+
+---
+
+## 2. Biên dịch
+
+### Linux / WSL / macOS (gcc/clang)
+
+Trong thư mục chứa đầy đủ các file `.c` và `.h`:
+
+```bash
+gcc -o block_modes main.c aes.c ecb.c cbc.c ctr.c ofb.c
+```
+## 3. Cách chạy:
+- Mở terminal và thực hiện lệnh `./block_modes`
+
 # Test vecto ECB
 - Key (hex): 08907f556b7244cc6b268d1c00a39995
 - Plaintext (ASCII): Secret Message!
